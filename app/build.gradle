@@ -71,6 +71,8 @@ dependencies {
 
     //Image Loading
     implementation "com.github.skydoves:landscapist-glide:1.5.2"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation "com.google.accompanist:accompanist-drawablepainter:0.24.9-beta"
 
 
 }
