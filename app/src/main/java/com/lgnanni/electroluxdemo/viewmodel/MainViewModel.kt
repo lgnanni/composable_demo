@@ -10,6 +10,7 @@ import com.gcorp.retrofithelper.ResponseHandler
 import com.gcorp.retrofithelper.RetrofitClient
 import com.lgnanni.electroluxdemo.data.Photo
 import com.lgnanni.electroluxdemo.data.Photos
+import com.lgnanni.electroluxdemo.data.PhotosWrapper
 import java.util.*
 
 class MainViewModel : ViewModel() {
@@ -17,10 +18,9 @@ class MainViewModel : ViewModel() {
     val photos: LiveData<List<Photo>> = _photos
     companion object {
         lateinit var retrofitClient: RetrofitClient
-
     }
 
-    private val API_BASE = "http://www.flickr.com/services/rest/?"
+    private val API_BASE = "https://api.flickr.com/services/rest/"
     private val API_KEY = "171f377e4b52f2cd6740dc0ce789b8e0"
 
     fun loadPhotos(context: Context, tag: String = "electrolux") {
@@ -34,8 +34,8 @@ class MainViewModel : ViewModel() {
             .addHeader("language", Locale.getDefault().language)
             .addHeader("os", android.os.Build.VERSION.RELEASE)
 
-        retrofitClient.Get<Photos>()
-            .setPath("method=flickr.photos.search" +
+        retrofitClient.Get<PhotosWrapper>()
+            .setPath("?method=flickr.photos.search" +
                     "&api_key=$API_KEY" +
                     "&tags=$tag" +
                     "&media=photo" +
@@ -43,14 +43,14 @@ class MainViewModel : ViewModel() {
                     "&page=1" +
                     "&format=json" +
                     "&nojsoncallback=1")
-            .setResponseHandler(Photos::class.java,
-                object : ResponseHandler<Photos>() {
-                    override fun onSuccess(response: Response<Photos>) {
+            .setResponseHandler(PhotosWrapper::class.java,
+                object : ResponseHandler<PhotosWrapper>() {
+                    override fun onSuccess(response: Response<PhotosWrapper>) {
                         super.onSuccess(response)
-                        _photos.value = response.body.photo
+                        _photos.value = response.body.photos.photo
                     }
 
-                    override fun onError(response: Response<Photos>?) {
+                    override fun onError(response: Response<PhotosWrapper>?) {
                         super.onError(response)
                         Toast.makeText(context, response.toString(), Toast.LENGTH_LONG).show()
                     }

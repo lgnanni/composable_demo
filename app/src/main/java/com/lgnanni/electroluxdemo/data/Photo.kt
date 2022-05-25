@@ -6,12 +6,14 @@ import kotlinx.parcelize.IgnoredOnParcel
 
 @Parcelize
 data class Photo (
-    val id: Integer,
+    val id: String,
     val owner: String,
     val secret: String,
     val server: Integer,
     val title: String,
-    val isPublic: Boolean): Parcelable {
+    val isPublic: Boolean,
+    val isFriend: Boolean,
+    val isFamily: Boolean): Parcelable {
 
     @IgnoredOnParcel
     private val URL_BASE = "https://live.staticflickr.com/"

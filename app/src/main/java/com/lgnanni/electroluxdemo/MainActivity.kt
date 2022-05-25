@@ -1,6 +1,7 @@
 package com.lgnanni.electroluxdemo
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -32,7 +33,7 @@ class MainActivity : ComponentActivity() {
 
         val model: MainViewModel by viewModels()
         model.photos.observe(this, Observer {
-            //Do stuffs
+            Toast.makeText(this, "Photos loaded!", Toast.LENGTH_LONG).show()
         })
 
         model.loadPhotos(this)
