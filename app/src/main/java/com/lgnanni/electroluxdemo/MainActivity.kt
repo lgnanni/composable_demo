@@ -107,7 +107,6 @@ class MainActivity : ComponentActivity() {
     fun TextSearchBar(modifier: Modifier = Modifier,
                       label: String,
                       onDoneActionClick: (String) -> Unit = {},
-                      onClearClick: () -> Unit = {},
                       onFocusChanged: (FocusState) -> Unit = {},
     ) {
 
@@ -123,7 +122,7 @@ class MainActivity : ComponentActivity() {
             textStyle = MaterialTheme.typography.subtitle1,
             singleLine = true,
             trailingIcon = {
-                IconButton(onClick = { onClearClick() }) {
+                IconButton(onClick = { text = "" }) {
                     Icon(imageVector = Icons.Filled.Clear, contentDescription = "Clear")
                 }
             },
