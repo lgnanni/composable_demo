@@ -14,13 +14,10 @@ data class Photo (
     val isPublic: Boolean,
     val isFriend: Boolean,
     val isFamily: Boolean): Parcelable {
-
-    @IgnoredOnParcel
-    private val URL_BASE = "https://live.staticflickr.com/"
-
+    
     fun getUrl() : String {
         return StringBuilder()
-            .append(URL_BASE)
+            .append("https://live.staticflickr.com/")
             .append(server)
             .append('/')
             .append(id)
