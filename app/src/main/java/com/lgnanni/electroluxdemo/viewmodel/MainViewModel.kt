@@ -1,16 +1,7 @@
 package com.lgnanni.electroluxdemo.viewmodel
 
-import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.os.Environment
-import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,11 +10,6 @@ import com.gcorp.retrofithelper.ResponseHandler
 import com.gcorp.retrofithelper.RetrofitClient
 import com.lgnanni.electroluxdemo.data.Photo
 import com.lgnanni.electroluxdemo.data.PhotosWrapper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
-import java.io.*
-import java.net.URL
 import java.util.*
 
 class MainViewModel : ViewModel() {
@@ -33,6 +19,12 @@ class MainViewModel : ViewModel() {
     private var _selectedPhoto = MutableLiveData("")
     val selectedPhoto: LiveData<String> = _selectedPhoto
 
+    private var _loading = MutableLiveData(false)
+    val loading: LiveData<Boolean> = _loading
+
+    private var _searchText = MutableLiveData("")
+    val searchText: LiveData<String> = _searchText
+
     companion object {
         lateinit var retrofitClient: RetrofitClient
     }
@@ -41,6 +33,7 @@ class MainViewModel : ViewModel() {
     private val API_KEY = "171f377e4b52f2cd6740dc0ce789b8e0"
 
     fun loadPhotos(context: Context, tag: String = "electrolux") {
+        _loading.value = true
         retrofitClient = RetrofitClient.instance
             .setBaseUrl(API_BASE)
             .setConnectionTimeout(4)
@@ -64,16 +57,19 @@ class MainViewModel : ViewModel() {
                 object : ResponseHandler<PhotosWrapper>() {
                     override fun onSuccess(response: Response<PhotosWrapper>) {
                         super.onSuccess(response)
+                        _loading.value = false
                         _photos.value = response.body.photos.photo
                     }
 
                     override fun onError(response: Response<PhotosWrapper>?) {
                         super.onError(response)
+                        _loading.value = false
                         Toast.makeText(context, response.toString(), Toast.LENGTH_LONG).show()
                     }
 
                     override fun onFailed(e: Throwable?) {
                         super.onFailed(e)
+                        _loading.value = false
                         Toast.makeText(context, e?.message, Toast.LENGTH_LONG).show()
                     }
                 }).run(context)
@@ -82,5 +78,9 @@ class MainViewModel : ViewModel() {
 
     fun setSelectedPhoto(photoUrl: String) {
         _selectedPhoto.value = photoUrl
+    }
+
+    fun setSearchText(text: String) {
+        _searchText.value = text
     }
 }
