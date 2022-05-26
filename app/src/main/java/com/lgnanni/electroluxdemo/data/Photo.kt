@@ -24,7 +24,7 @@ data class Photo (
             .append('_')
             .append(secret)
             .append('_')
-            .append('w')
+            .append('b')
             .append(".jpg").toString()
     }
 }

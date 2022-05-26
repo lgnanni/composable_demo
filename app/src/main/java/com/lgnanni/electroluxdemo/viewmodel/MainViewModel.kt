@@ -1,7 +1,16 @@
 package com.lgnanni.electroluxdemo.viewmodel
 
+import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,13 +18,21 @@ import com.gcorp.retrofithelper.Response
 import com.gcorp.retrofithelper.ResponseHandler
 import com.gcorp.retrofithelper.RetrofitClient
 import com.lgnanni.electroluxdemo.data.Photo
-import com.lgnanni.electroluxdemo.data.Photos
 import com.lgnanni.electroluxdemo.data.PhotosWrapper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
+import java.io.*
+import java.net.URL
 import java.util.*
 
 class MainViewModel : ViewModel() {
     private var _photos = MutableLiveData(emptyList<Photo>())
     val photos: LiveData<List<Photo>> = _photos
+
+    private var _selectedPhoto = MutableLiveData("")
+    val selectedPhoto: LiveData<String> = _selectedPhoto
+
     companion object {
         lateinit var retrofitClient: RetrofitClient
     }
@@ -61,5 +78,9 @@ class MainViewModel : ViewModel() {
                     }
                 }).run(context)
 
+    }
+
+    fun setSelectedPhoto(photoUrl: String) {
+        _selectedPhoto.value = photoUrl
     }
 }
